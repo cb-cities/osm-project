@@ -1,3 +1,10 @@
+# https://stackoverflow.com/questions/23166158/make-python-script-to-run-forever-on-amazon-ec2
+# screen -S <screen_name>
+# screen -r <screen_name>
+# detached control + A D
+# screen -X -S [session # you want to kill] questions
+# nohup python3 -u geojson2json.py > out.log 2>&1 &
+
 # node.json			id:       , point:
 # link.json			negaid:	  , posiid:			, polyline: 
 # roads.geojson		geometry.coordinates:
