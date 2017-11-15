@@ -2,7 +2,7 @@
 # screen -S <screen_name>
 # screen -r <screen_name>
 # detached control + A D
-# screen -X -S [session # you want to kill] questions
+# screen -X -S [session # you want to kill] kill
 # nohup python3 -u geojson2json.py > out.log 2>&1 &
 
 # node.json			id:       , point:
