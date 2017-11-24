@@ -5,8 +5,9 @@
 # screen -X -S [session # you want to kill] kill
 # nohup python3 -u geojson2json.py > out.log 2>&1 &
 
-# node.json			id:       , point:
-# link.json			negaid:	  , posiid:			, polyline: 
+# nodes1.json			id:       , point:
+# links1.json			id:		  , negaid:	  		, posiid:			, polyline: 
+# linkgroups.json		group:	  , members:		, toid:				
 # roads.geojson		geometry.coordinates:
 import re
 import os
@@ -15,19 +16,25 @@ import geojson
 
 #result file
 f_linkgroup = open('linkgroups.json', 'w')
-f_link = open('links.json', 'w')
-f_node = open('nodes.json', 'w')
+f_link = open('links1.json', 'w')
+f_node = open('nodes1.json', 'w')
 
 # point_set is used to store point to avoid duplicate
 point_set = []
-
-
+link_set = 0
 # parse coordinates into links.json
 def link_write(coordinates):
+	global link_set
 	f_link.write("{\n")
 	#write negativeNode
 	NegativeNodeToid = "osgb"+str(4000000000000000+point_set.index(coordinates[0])+1)
 	f_link.write("\"negativeNode\": \""+NegativeNodeToid+"\",\n")
+	#write toid of link
+	toid_link = "osgb"+str(4100000000000000+link_set+1)
+	toid_linkgroup = "osgb"+str(4200000000000000+link_set+1)
+	f_link.write("\"toid\": \""+toid_link+"\",\n")
+	#write linkgroups
+	f_linkgroup.write("{\"group\":\"Named Road\",\"members\":[\""+toid_link+"\"],\"toid\":\""+toid_linkgroup+"\"}\n,")
 	#write polyline
 	f_link.write("\"polyline\": [\n")
 	for point in coordinates:
@@ -37,6 +44,7 @@ def link_write(coordinates):
 	PositiveNodeToid = "osgb"+str(4000000000000000+point_set.index(coordinates[-1])+1)
 	f_link.write("\"positiveNode\": \""+PositiveNodeToid+"\"\n")
 	f_link.write("},\n")
+	link_set+=1 
 
 # parse coordinates into node.json
 def node_write(coordinates):
@@ -67,6 +75,7 @@ with open(os.path.expanduser('san-francisco_california_roads.geojson'), encoding
 	pattern1 = "^{ \"type\":.*\"type\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice})\".*},$"
 	pattern2 = "^{ \"type\":.*\"type\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice})\".*}$"
 	f_link.write("[\n")
+	f_linkgroup.write("[")
 	f_node.write("[")
 	for line in fp:
 		if re.search(pattern1,line):
@@ -83,6 +92,8 @@ with open(os.path.expanduser('san-francisco_california_roads.geojson'), encoding
 				link_write(coordinates)
 	f_node.write("]")
 	f_link.write("]")
+	f_linkgroup.write("]")
+f_linkgroup.close()
 f_link.close()
 f_node.close()
 print("Successfully parse all geojson roads into links and nodes")
