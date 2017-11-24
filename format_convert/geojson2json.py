@@ -14,11 +14,13 @@ import json
 import geojson
 
 #result file
+f_linkgroup = open('linkgroups.json', 'w')
 f_link = open('links.json', 'w')
 f_node = open('nodes.json', 'w')
 
 # point_set is used to store point to avoid duplicate
 point_set = []
+
 
 # parse coordinates into links.json
 def link_write(coordinates):
