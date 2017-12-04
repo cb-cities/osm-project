@@ -78,7 +78,7 @@ def json_validator(data):
         return False
 
 # main code 'san-francisco_california_roads.geojson' is filepath
-with open(os.path.expanduser('san-francisco_california_roads_gen0.geojson'), encoding='utf-8') as fp:
+with open(os.path.expanduser('san-francisco_california_roads.geojson'), encoding='utf-8') as fp:
 	# two possible json line, one without "," is the end line
 	# only extract road car_permission = allowed
 	# the set is highway == { motorway or motorway_link or motorway_junction or trunk or trunk_link or primary_link or primary or secondary or tertiary or unclassified or unsurfaced or track or residential or living_street or 
