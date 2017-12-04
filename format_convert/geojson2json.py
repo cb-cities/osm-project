@@ -15,7 +15,7 @@ import json
 import geojson
 
 #result file
-f_linkgroup = open('linkgroups.json', 'w')
+#f_linkgroup = open('linkgroups.json', 'w')
 f_link = open('links1.json', 'w')
 f_node = open('nodes1.json', 'w')
 
@@ -23,18 +23,26 @@ f_node = open('nodes1.json', 'w')
 point_set = []
 link_set = 0
 # parse coordinates into links.json
-def link_write(coordinates):
+def link_write(coordinates,properties):
 	global link_set
 	f_link.write("{\n")
+	#write "index": 0,
+	f_link.write("\"index\": "+str(link_set)+",\n")
+	#write "term": "A Road",
+	f_link.write("\"term\": \""+"Motorway"+"\",\n")
+	#write "restriction": "One Way",
+	f_link.write("\"restriction\": \""+"One Way"+"\",\n")
+	#write "nature": "Roundabout",
+	f_link.write("\"nature\": \""+"Roundabout"+"\",\n")
 	#write negativeNode
 	NegativeNodeToid = "osgb"+str(4000000000000000+point_set.index(coordinates[0])+1)
 	f_link.write("\"negativeNode\": \""+NegativeNodeToid+"\",\n")
 	#write toid of link
-	toid_link = "osgb"+str(4100000000000000+link_set+1)
+	toid_link = "osgb"+str(4000000000000000+int(properties['osm_id']))
 	toid_linkgroup = "osgb"+str(4200000000000000+link_set+1)
 	f_link.write("\"toid\": \""+toid_link+"\",\n")
 	#write linkgroups
-	f_linkgroup.write("{\"group\":\"Named Road\",\"members\":[\""+toid_link+"\"],\"toid\":\""+toid_linkgroup+"\"}\n,")
+	##f_linkgroup.write("{\"group\":\"Named Road\",\"members\":[\""+toid_link+"\"],\"toid\":\""+toid_linkgroup+"\"}\n,")
 	#write polyline
 	f_link.write("\"polyline\": [\n")
 	for point in coordinates:
@@ -42,7 +50,9 @@ def link_write(coordinates):
 	f_link.write("],\n")
 	#write positiveNode
 	PositiveNodeToid = "osgb"+str(4000000000000000+point_set.index(coordinates[-1])+1)
-	f_link.write("\"positiveNode\": \""+PositiveNodeToid+"\"\n")
+	f_link.write("\"positiveNode\": \""+PositiveNodeToid+"\",\n")
+	#write "orientation": "+"
+	f_link.write("\"orientation\": \""+"-"+"\"\n")
 	f_link.write("},\n")
 	link_set+=1 
 
@@ -68,14 +78,14 @@ def json_validator(data):
         return False
 
 # main code 'san-francisco_california_roads.geojson' is filepath
-with open(os.path.expanduser('san-francisco_california_roads.geojson'), encoding='utf-8') as fp:
+with open(os.path.expanduser('san-francisco_california_roads_gen0.geojson'), encoding='utf-8') as fp:
 	# two possible json line, one without "," is the end line
 	# only extract road car_permission = allowed
 	# the set is highway == { motorway or motorway_link or motorway_junction or trunk or trunk_link or primary_link or primary or secondary or tertiary or unclassified or unsurfaced or track or residential or living_street or 
 	pattern1 = "^{ \"type\":.*\"type\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice})\".*},$"
 	pattern2 = "^{ \"type\":.*\"type\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice})\".*}$"
 	f_link.write("[\n")
-	f_linkgroup.write("[")
+	#f_linkgroup.write("[")
 	f_node.write("[")
 	for line in fp:
 		if re.search(pattern1,line):
@@ -83,17 +93,19 @@ with open(os.path.expanduser('san-francisco_california_roads.geojson'), encoding
 				feature = geojson.loads(line[0:-2])		# remove "," and "\n"
 				coordinates = feature['geometry']['coordinates']
 				node_write(coordinates)
-				link_write(coordinates)
+				properties = feature['properties']
+				link_write(coordinates,properties)
 		elif re.search(pattern2,line):
 			if json_validator(line[0:-1]):
 				feature = geojson.loads(line[0:-1])		# remove "\n"
 				coordinates = feature['geometry']['coordinates']
 				node_write(coordinates)
-				link_write(coordinates)
+				properties = feature['properties']
+				link_write(coordinates,properties)
 	f_node.write("]")
 	f_link.write("]")
-	f_linkgroup.write("]")
-f_linkgroup.close()
+	#f_linkgroup.write("]")
+#f_linkgroup.close()
 f_link.close()
 f_node.close()
 print("Successfully parse all geojson roads into links and nodes")
