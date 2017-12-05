@@ -46,7 +46,10 @@ def link_write(coordinates,properties):
 	#write polyline
 	f_link.write("\"polyline\": [\n")
 	for point in coordinates:
-		f_link.write(str(point[0])+',\n'+str(point[1])+',\n')
+		if point == coordinates[-1]:
+			f_link.write(str(point[0])+',\n'+str(point[1])+'\n')
+		else:
+			f_link.write(str(point[0])+',\n'+str(point[1])+',\n')
 	f_link.write("],\n")
 	#write positiveNode
 	PositiveNodeToid = "osgb"+str(4000000000000000+point_set.index(coordinates[-1])+1)
