@@ -1,6 +1,15 @@
 # Hanxiao Deng's CE299 Project
-### Data_Harvest
-###### This is code repo for harvesting OpenStreetMap data from Mapzen API to AWS S3 buckets. 
+### Data Harvest
+This is code repo for harvesting OpenStreetMap data from Mapzen API to AWS S3 buckets. 
+
+### Usage
+```
+cd osm-project/data_harvest
+screen -S harvest
+nohup python -u harvest.py > out.log 2>&1 &
+Crtl + A + D to detach screen
+```
+
 1. San Francisco Mapzen API link:
     - Datasets split by geometry type: lines, points, or polygons (OSM2PGSQL)
         - https://s3.amazonaws.com/metro-extracts.mapzen.com/san-francisco_california.osm2pgsql-geojson.zip
