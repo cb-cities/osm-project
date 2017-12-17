@@ -1,4 +1,4 @@
 # osm-project  
 ## This is Hanxiao Deng's CE299 project repo
-### 1. harvest osm data of San Francisco, London and New York
-### 2. parse geojson data from osm to json data to fit sierra-charlie
+	1. Harvest osm data of San Francisco, London and New York.
+	2. Parse geojson file to json data to visualize in sierra-charlie based on Node.js.
