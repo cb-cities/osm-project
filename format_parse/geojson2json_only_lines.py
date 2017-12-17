@@ -130,8 +130,8 @@ def line_write_node_and_link(line):
 	# two possible json line, one without "," is the end line
 	# only extract road car_permission = allowed
 	# the set is highway == { motorway 1515 or motorway_link 3007 or motorway_junction 0 or trunk 1024 or trunk_link 108 or primary_link 256 or primary 5352 or secondary 9207 or tertiary 6865 or unclassified 1371 or unsurfaced 0 or track 1402 or residential 33780 or living_street 68.
-	pattern1 = "^{ \"type\":.*\"type\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice})\".*},$"
-	pattern2 = "^{ \"type\":.*\"type\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice})\".*}$"
+	pattern1 = "{ .*\"highway\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice)\".*},"
+	pattern2 = "{ .*\"highway\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice)\".*}"
 	feature = {}
 	if re.search(pattern1,line):
 		if json_validator(line[0:-2]):
@@ -159,23 +159,21 @@ def json_validator(data):
 
 # main code 'san-francisco_california_osm_line.geojson' is filepath
 # write nodes1.json links1.json
-files = ['san-francisco_california_roads.geojson','san-francisco_california_roads_gen0.geojson','san-francisco_california_roads_gen1.geojson']
-f_node.write("[")
-f_link.write("[\n")
-for filename in files:
-	with open(os.path.expanduser(filename), encoding='utf-8') as fp:
-		while True:
-			try:
-				line = fp.readline()
-				if not line:
-					break
-				else:
-					line_write_node_and_link(line)
-			except UnicodeDecodeError as error:
-				print("invalid json line: %s" % error)
-f_node.write("]")
-f_link.write("]")
-#f_linkgroup.write("]")
+with open(os.path.expanduser('san-francisco_california_osm_line.geojson'), encoding='utf-8') as fp:
+	f_node.write("[")
+	f_link.write("[\n")
+	while True:
+		try:
+			line = fp.readline()
+			if not line:
+				break
+			else:
+				line_write_node_and_link(line)
+		except UnicodeDecodeError as error:
+			print("invalid json line: %s" % error)
+	f_node.write("]")
+	f_link.write("]")
+	#f_linkgroup.write("]")
 f_node.close()
 f_link.close()
 print("Successfully parse all nodes and links")

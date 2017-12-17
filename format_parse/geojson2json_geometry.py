@@ -105,21 +105,21 @@ def line_write_link(line):
 	# the set is highway == { motorway 1515 or motorway_link 3007 or motorway_junction 0 or trunk 1024 or trunk_link 108 or primary_link 256 or primary 5352 or secondary 9207 or tertiary 6865 or unclassified 1371 or unsurfaced 0 or track 1402 or residential 33780 or living_street 68.
 	pattern1 = "{ .*\"highway\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice)\".*},"
 	pattern2 = "{ .*\"highway\": \"(motorway|motorway_link|motorway_junction|trunk|trunk_link|primary_link|primary|secondary|tertiary|unclassified|unsurfaced|track|residential|living_street|dservice)\".*}"
-	for line in fp:
-		if re.search(pattern1,line):
-			if json_validator(line[0:-2]):
-				feature = geojson.loads(line[0:-2])		# remove "," and "\n"
-				coordinates = feature['geometry']['coordinates']
-				coordinates = [[round(point[0]*1000),round(point[1]*1000)] for point in coordinates]
-				properties = feature['properties']
-				link_write(coordinates,properties)
-		elif re.search(pattern2,line):
-			if json_validator(line[0:-1]):
-				feature = geojson.loads(line[0:-1])		# remove "\n"
-				coordinates = feature['geometry']['coordinates']
-				coordinates = [[round(point[0]*1000),round(point[1]*1000)] for point in coordinates]
-				properties = feature['properties']
-				link_write(coordinates,properties)
+	if re.search(pattern1,line):
+		if json_validator(line[0:-2]):
+			feature = geojson.loads(line[0:-2])		# remove "," and "\n"
+			coordinates = feature['geometry']['coordinates']
+			coordinates = [[round(point[0]*1000),round(point[1]*1000)] for point in coordinates]
+			properties = feature['properties']
+			link_write(coordinates,properties)
+	elif re.search(pattern2,line):
+		if json_validator(line[0:-1]):
+			feature = geojson.loads(line[0:-1])		# remove "\n"
+			coordinates = feature['geometry']['coordinates']
+			coordinates = [[round(point[0]*1000),round(point[1]*1000)] for point in coordinates]
+			properties = feature['properties']
+			link_write(coordinates,properties)
+
 #there are some non-json data error in geojson file
 def json_validator(data):
     try:
