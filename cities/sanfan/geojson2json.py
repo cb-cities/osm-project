@@ -1,4 +1,3 @@
-# https://stackoverflow.com/questions/23166158/make-python-script-to-run-forever-on-amazon-ec2
 # screen -S <screen_name>
 # screen -r <screen_name>
 # detached control + A D
