@@ -5,10 +5,6 @@
 # screen -X -S [session # you want to kill] kill
 # nohup python3 -u geojson2json.py > out.log 2>&1 &
 
-# nodes1.json			id:       , point:
-# links1.json			id:		  , negaid:	  		, posiid:			, polyline: 
-# linkgroups.json		group:	  , members:		, toid:				
-# roads.geojson		geometry.coordinates:
 import re
 import os
 import json
