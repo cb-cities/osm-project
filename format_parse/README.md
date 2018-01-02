@@ -28,3 +28,15 @@ eg. for London [Download Links](https://mapzen.com/data/metro-extracts/metro/lon
         - london_england_roads_gen0.geojson
         - london_england_roads_gen1.geojson
         - london_england_roads.geojson
+- There are two defferent python code to parse data from the two source.
+    1. By geometry
+        - geojson2json_geometry.py
+        - You need: 
+            1. london_england_osm_line.geojson
+            2. london_england_osm_point.geojson
+    2. By tags
+        - geojson2json_tags.py
+        - You need:
+            1. san-francisco_california_roads.geojson
+            2. san-francisco_california_roads_gen0.geojson
+            3. san-francisco_california_roads_gen1.geojson
